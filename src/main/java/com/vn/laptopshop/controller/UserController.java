@@ -6,6 +6,8 @@ import com.vn.laptopshop.domain.User;
 import com.vn.laptopshop.repository.UserRepository;
 import com.vn.laptopshop.service.UserService;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +28,8 @@ public class UserController {
     public String getHomePage(Model model) {
         String test = this.userService.handleHello();
         model.addAttribute("test", test);
+        List<User> arrusers = this.userService.getUsersByEmail("1@gmail.com");
+        System.out.println(arrusers);
         return "hello";
     }
 
