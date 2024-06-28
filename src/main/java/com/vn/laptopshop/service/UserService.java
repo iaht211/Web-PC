@@ -22,7 +22,6 @@ public class UserService {
 
     public User createUser(User user) {
         User mavis = this.userRepository.save(user);
-        System.out.println(mavis);
         return mavis;
     }
 

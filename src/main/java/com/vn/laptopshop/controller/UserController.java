@@ -10,11 +10,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class UserController {
@@ -34,6 +32,13 @@ public class UserController {
     }
 
     @RequestMapping("/admin/user")
+    public String tableUsers(Model model) {
+        List<User> arr = this.userService.getAllUsers();
+        model.addAttribute("users", arr);
+        return "admin/user/table-user";
+    }
+
+    @RequestMapping("/admin/user/create")
     public String getCreateUserPage(Model model) {
         model.addAttribute("newUser", new User());
         return "admin/user/create";
@@ -42,6 +47,6 @@ public class UserController {
     @RequestMapping(value = "/admin/user/create1", method = RequestMethod.POST)
     public String postCreateUser(@ModelAttribute("newUser") User newUser, Model model) {
         this.userService.createUser(newUser);
-        return "hello";
+        return "redirect:/admin/user";
     }
 }
