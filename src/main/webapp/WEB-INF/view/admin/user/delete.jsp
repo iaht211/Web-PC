@@ -16,29 +16,17 @@
             <body>
                 <div class="container mt-5">
                     <div class="row">
-                        <div class="col-md-6 col-12 mx-auto">
-                            <h3>update User</h3>
-                            <form:form method="post" action="/admin/user/update" modelAttribute="user">
+                        <div class="col-12 mx-auto">
+                            <h3>Delete User With Id: ${user.id}</h3>
+                            <form:form method="post" action="/admin/user/delete" modelAttribute="user">
                                 <div class="mb-3" style="display: none;">
                                     <form:input type="text" class="form-control" path="id" />
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Email</label>
-                                    <form:input type="email" class="form-control" path="email" disabled="true" />
+                                <hr />
+                                <div class="alert alert-danger" role="alert">
+                                    Are you sure want delete this user !!!
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">FullName</label>
-                                    <form:input type="text" class="form-control" path="fullName" />
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Address</label>
-                                    <form:input type="text" class="form-control" path="address" />
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Phone</label>
-                                    <form:input type="text" class="form-control" path="phone" />
-                                </div>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" class="btn btn-danger">Submit</button>
                             </form:form>
                         </div>
                     </div>
