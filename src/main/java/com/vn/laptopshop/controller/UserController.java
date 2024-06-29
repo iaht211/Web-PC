@@ -53,9 +53,28 @@ public class UserController {
         return "admin/user/create";
     }
 
-    @RequestMapping(value = "/admin/user/create1", method = RequestMethod.POST)
+    @RequestMapping(value = "/admin/user/create", method = RequestMethod.POST)
     public String postCreateUser(@ModelAttribute("newUser") User newUser, Model model) {
-        this.userService.createUser(newUser);
+        this.userService.handleSaveUser(newUser);
+        return "redirect:/admin/user";
+    }
+
+    @RequestMapping(value = "/admin/user/update/{id}")
+    public String getUpdateUserPage(Model model, @PathVariable long id) {
+        User user = userService.getUserById(id);
+        model.addAttribute("user", user);
+        return "admin/user/update";
+    }
+
+    @RequestMapping(value = "/admin/user/update", method = RequestMethod.POST)
+    public String postUpdateUser(Model model, @ModelAttribute("user") User user) {
+        User currentUser = this.userService.getUserById(user.getId());
+        if (currentUser != null) {
+            currentUser.setFullName(user.getFullName());
+            currentUser.setAddress(user.getAddress());
+            currentUser.setPhone(user.getPhone());
+            this.userService.handleSaveUser(user);
+        }
         return "redirect:/admin/user";
     }
 }

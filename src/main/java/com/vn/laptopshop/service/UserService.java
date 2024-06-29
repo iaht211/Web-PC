@@ -20,9 +20,9 @@ public class UserService {
         return "hello form serveice";
     }
 
-    public User createUser(User user) {
-        User mavis = this.userRepository.save(user);
-        return mavis;
+    public User handleSaveUser(User user) {
+
+        return this.userRepository.save(user);
     }
 
     public User getUserById(long id) {

@@ -17,15 +17,14 @@
                 <div class="container mt-5">
                     <div class="row">
                         <div class="col-md-6 col-12 mx-auto">
-                            <h3>Create User</h3>
-                            <form:form method="post" action="/admin/user/create" modelAttribute="newUser">
+                            <h3>update User</h3>
+                            <form:form method="post" action="/admin/user/update" modelAttribute="user">
+                                <div class="mb-3" style="display: none;">
+                                    <form:input type="text" class="form-control" path="id" />
+                                </div>
                                 <div class="mb-3">
                                     <label class="form-label">Email</label>
                                     <form:input type="email" class="form-control" path="email" />
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Password</label>
-                                    <form:input type="password" class="form-control" path="password" />
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">FullName</label>
