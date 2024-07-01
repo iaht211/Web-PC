@@ -1,9 +1,6 @@
-package com.vn.laptopshop.controller;
-
-import org.springframework.web.bind.annotation.RestController;
+package com.vn.laptopshop.controller.admin;
 
 import com.vn.laptopshop.domain.User;
-import com.vn.laptopshop.repository.UserRepository;
 import com.vn.laptopshop.service.UserService;
 
 import java.util.List;
@@ -38,7 +35,7 @@ public class UserController {
     public String tableUsers(Model model) {
         List<User> arr = this.userService.getAllUsers();
         model.addAttribute("users", arr);
-        return "admin/user/table-user";
+        return "admin/user/index";
     }
 
     @RequestMapping("/admin/user/{id}")
@@ -46,7 +43,7 @@ public class UserController {
         System.out.println("test id: " + id);
         User user = userService.getUserById(id);
         model.addAttribute("user", user);
-        return "admin/user/view";
+        return "admin/user/detail";
     }
 
     @RequestMapping("/admin/user/create")

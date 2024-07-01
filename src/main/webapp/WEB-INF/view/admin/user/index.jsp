@@ -10,8 +10,7 @@
             <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
             <meta name="author" content="Hỏi Dân IT" />
             <title>Dashboard - Hỏi Dân IT</title>
-            <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-            <link href="css/styles.css" rel="stylesheet" />
+            <link href="/css/styles.css" rel="stylesheet" />
             <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         </head>
 
@@ -24,7 +23,8 @@
                         <div class="container-fluid px-4">
                             <h1 class="mt-4">Dashboard</h1>
                             <ol class="breadcrumb mb-4">
-                                <li class="breadcrumb-item active">Dashboard</li>
+                                <li class="breadcrumb-item">Dashboard</li>
+                                <li class="breadcrumb-item active">Users</li>
                             </ol>
                             <div class="container mt-5">
                                 <div class="row">
