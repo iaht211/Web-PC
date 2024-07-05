@@ -45,7 +45,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="inputEmail4" class="form-label">Phone number:</label>
-                                                    <form:input type="email" class="form-control" path="phone" />
+                                                    <form:input type="text" class="form-control" path="phone" />
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="inputPassword4" class="form-label">Full name:</label>

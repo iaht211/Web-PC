@@ -6,6 +6,7 @@ import com.vn.laptopshop.domain.User;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+
     User save(User user);
 
     List<User> findByEmail(String email);
@@ -15,4 +16,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findById(long id);
 
     void deleteById(long id);
+
 }

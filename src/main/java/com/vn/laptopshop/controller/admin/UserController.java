@@ -1,15 +1,13 @@
 package com.vn.laptopshop.controller.admin;
 
+import com.vn.laptopshop.config.SecurityConfig;
 import com.vn.laptopshop.domain.User;
+import com.vn.laptopshop.service.UploadService;
 import com.vn.laptopshop.service.UserService;
 
-import jakarta.servlet.ServletContext;
-
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,11 +22,13 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 public class UserController {
     private final UserService userService;
-    private final ServletContext servletContext;
+    private final UploadService uploadService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, ServletContext servletContext) {
+    public UserController(UserService userService, UploadService uploadService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
-        this.servletContext = servletContext;
+        this.uploadService = uploadService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @RequestMapping("/")
@@ -64,33 +64,15 @@ public class UserController {
     @PostMapping(value = "/admin/user/create")
     public String postCreateUser(@ModelAttribute("newUser") User newUser, Model model,
             @RequestParam("file") MultipartFile file) {
-        if (!file.isEmpty()) {
-            try {
-                byte[] bytes = file.getBytes();
 
-                // Creating the directory to store file
-                System.out.println(this.servletContext.getContextPath());
-                String rootPath = this.servletContext.getRealPath("/resources/images");
-                File dir = new File(rootPath + File.separator + "avatar");
-                if (!dir.exists())
-                    dir.mkdirs();
-
-                // Create the file on server
-                File serverFile = new File(dir.getAbsolutePath() + File.separator +
-                        +System.currentTimeMillis() + "-" + file.getOriginalFilename());
-                BufferedOutputStream stream = new BufferedOutputStream(
-                        new FileOutputStream(serverFile));
-                stream.write(bytes);
-                stream.close();
-
-            } catch (Exception e) {
-                return "You failed to upload " + " => " + e.getMessage();
-            }
-        } else {
-            return "You failed to upload "
-                    + " because the file was empty.";
-        }
-        // this.userService.handleSaveUser(newUser);
+        String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
+        System.out.println(avatar);
+        String hashPassword = this.passwordEncoder.encode(newUser.getPassword());
+        System.out.println("check password: " + hashPassword);
+        newUser.setAvatar(avatar);
+        newUser.setPassword(hashPassword);
+        newUser.setRole(this.userService.getRoleByName(newUser.getRole().getName()));
+        this.userService.handleSaveUser(newUser);
         return "redirect:/admin/user";
     }
 
