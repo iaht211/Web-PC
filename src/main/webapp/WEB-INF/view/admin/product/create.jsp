@@ -59,26 +59,24 @@
                                                     ${errorPrice}
                                                 </div>
                                                 <div class="col-md-12">
-                                                    <c:set var="errorDetailDescription">
-                                                        <form:errors path="detailDescription"
-                                                            cssClass="invalid-feedback" />
+                                                    <c:set var="errordetail_desc">
+                                                        <form:errors path="detail_desc" cssClass="invalid-feedback" />
                                                     </c:set>
                                                     <label class="form-label">Details description</label>
                                                     <form:input type="text"
-                                                        class="form-control ${not empty errorDetailDescription ? 'is-invalid' : ''}"
-                                                        path="detailDescription" />
-                                                    ${errorDetailDescription}
+                                                        class="form-control ${not empty errordetail_desc ? 'is-invalid' : ''}"
+                                                        path="detail_desc" />
+                                                    ${errordetail_desc}
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <c:set var="errorShortDescription">
-                                                        <form:errors path="shortDescription"
-                                                            cssClass="invalid-feedback" />
+                                                    <c:set var="errorshort_desc">
+                                                        <form:errors path="short_desc" cssClass="invalid-feedback" />
                                                     </c:set>
                                                     <label class="form-label">Short description</label>
                                                     <form:input type="text"
-                                                        class="form-control ${not empty errorShortDescription ? 'is-invalid' : ''}"
-                                                        path="shortDescription" />
-                                                    ${errorShortDescription}
+                                                        class="form-control ${not empty errorshort_desc ? 'is-invalid' : ''}"
+                                                        path="short_desc" />
+                                                    ${errorshort_desc}
                                                 </div>
                                                 <div data-mdb-input-init class="form-outline col-md-6">
                                                     <c:set var="errorQuantity">

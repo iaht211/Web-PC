@@ -31,12 +31,12 @@ public class Product {
 
     private String image;
     @NotNull
-    @Size(min = 3, message = "detailDescription phải có tối thiểu 3 ký tự")
+    @Size(min = 3, message = "detail_desc phải có tối thiểu 3 ký tự")
     @Column(columnDefinition = "MEDIUMTEXT")
-    private String detailDescription;
+    private String detail_desc;
     @NotNull
-    @Size(min = 3, message = "detailDescription phải có tối thiểu 3 ký tự")
-    private String shortDescription;
+    @Size(min = 3, message = "detail_desc phải có tối thiểu 3 ký tự")
+    private String short_desc;
     @NotNull
     @Min(value = 0, message = "Số lượng phải lớn hơn 0")
     private long quantity;
@@ -83,20 +83,20 @@ public class Product {
         this.image = image;
     }
 
-    public String getDetailDescription() {
-        return detailDescription;
+    public String getDetail_desc() {
+        return detail_desc;
     }
 
-    public void setDetailDescription(String detailDescription) {
-        this.detailDescription = detailDescription;
+    public void setDetail_desc(String detail_desc) {
+        this.detail_desc = detail_desc;
     }
 
-    public String getShortDescription() {
-        return shortDescription;
+    public String getShort_desc() {
+        return short_desc;
     }
 
-    public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
+    public void setShort_desc(String short_desc) {
+        this.short_desc = short_desc;
     }
 
     public long getQuantity() {
@@ -129,13 +129,6 @@ public class Product {
 
     public void setTarget(String target) {
         this.target = target;
-    }
-
-    @Override
-    public String toString() {
-        return "Product [id=" + id + ", name=" + name + ", price=" + price + ", image=" + image + ", detailDescription="
-                + detailDescription + ", shortDescription=" + shortDescription + ", quantity=" + quantity + ", sold="
-                + sold + ", factory=" + factory + ", target=" + target + "]";
     }
 
 }

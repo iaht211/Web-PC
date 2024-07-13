@@ -41,7 +41,7 @@
                                                 <li class="list-group-item">Name: ${product.name}</li>
                                                 <li class="list-group-item">Price: ${product.price}</li>
                                                 <li class="list-group-item">Description:
-                                                    ${product.detailDescription}</li>
+                                                    ${product.detail_desc}</li>
                                             </ul>
                                         </div>
                                         <a href="/admin/product" class="btn btn-success mt-3 col-1"> Back </a>

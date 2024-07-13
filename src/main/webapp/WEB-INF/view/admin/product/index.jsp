@@ -48,7 +48,7 @@
                                                     <tr>
                                                         <th scope="row">${product.id}</th>
                                                         <td>${product.name}</td>
-                                                        <td>${product.shortDescription}</td>
+                                                        <td>${product.short_desc}</td>
                                                         <td>
                                                             <a href="/admin/product/${product.id}"
                                                                 class="btn btn-success">View</a>

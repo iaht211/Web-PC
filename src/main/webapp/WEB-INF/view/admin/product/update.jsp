@@ -48,13 +48,11 @@
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label class="form-label">Details description</label>
-                                                    <form:input type="text" class="form-control"
-                                                        path="detailDescription" />
+                                                    <form:input type="text" class="form-control" path="detail_desc" />
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Short description</label>
-                                                    <form:input type="text" class="form-control"
-                                                        path="shortDescription" />
+                                                    <form:input type="text" class="form-control" path="short_desc" />
                                                 </div>
                                                 <div data-mdb-input-init class="form-outline col-md-6">
                                                     <label class="form-label">Quantity</label>
