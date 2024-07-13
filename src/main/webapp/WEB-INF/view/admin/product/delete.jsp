@@ -23,23 +23,24 @@
                     <div id="layoutSidenav_content">
                         <main>
                             <div class="container-fluid px-4">
-                                <h1 class="mt-4">Delete User</h1>
+                                <h1 class="mt-4">Dashboard</h1>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-                                    <li class="breadcrumb-item active"><a href="/admin/user">Users</a></li>
+                                    <li class="breadcrumb-item active"><a href="/admin/product">Products</a></li>
                                     <li class="breadcrumb-item"><a>Delete</a></li>
                                 </ol>
                                 <div class="container mt-5">
                                     <div class="row">
                                         <div class="col-12 mx-auto">
-                                            <h3>Delete User With Id: ${user.id}</h3>
-                                            <form:form method="post" action="/admin/user/delete" modelAttribute="user">
+                                            <h3>Delete User With Id: ${product.id}</h3>
+                                            <form:form method="post" action="/admin/product/delete"
+                                                modelAttribute="product">
                                                 <div class="mb-3" style="display: none;">
                                                     <form:input type="text" class="form-control" path="id" />
                                                 </div>
                                                 <hr />
                                                 <div class="alert alert-danger" role="alert">
-                                                    Are you sure want delete this user !!!
+                                                    Are you sure want delete this product !!!
                                                 </div>
                                                 <button type="submit" class="btn btn-danger">Submit</button>
                                             </form:form>
