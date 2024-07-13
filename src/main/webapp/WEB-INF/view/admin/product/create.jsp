@@ -47,6 +47,7 @@
                                                         path="name" />
                                                     ${errorName}
                                                 </div>
+
                                                 <div class="col-md-6">
                                                     <c:set var="errorPrice">
                                                         <form:errors path="price" cssClass="invalid-feedback" />

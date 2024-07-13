@@ -31,6 +31,10 @@
                                 <div class="row">
                                     <div class="col-12 mx-auto">
                                         <h3>Details Product</h3>
+                                        <div class="col-12">
+                                            <img src="/images/product/${product.image}" id="avatarPreview"
+                                                style="max-height: 250px;" alt="avatar preview" />
+                                        </div>
                                         <div class="card" style="width: 60%;">
                                             <ul class="list-group list-group-flush" modelAttribute="product">
                                                 <li class="list-group-item">ID: ${product.id}</li>

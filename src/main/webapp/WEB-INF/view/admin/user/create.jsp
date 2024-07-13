@@ -49,7 +49,6 @@
                                                     <c:set var="errorPassword">
                                                         <form:errors path="password" cssClass="invalid-feedback" />
                                                     </c:set>
-
                                                     <label class="form-label">Password</label>
                                                     <form:input type="password"
                                                         class="form-control ${not empty errorPassword ? 'is-invalid' : ''}"

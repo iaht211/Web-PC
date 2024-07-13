@@ -2,8 +2,6 @@ package com.vn.laptopshop.domain;
 
 import java.util.List;
 
-import org.springframework.format.annotation.NumberFormat;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,11 +11,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "products")
@@ -26,20 +22,22 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Min(value = 1, message = "Tên không được để trống")
+    @NotNull
+    @Size(min = 3, message = "Name phải có tối thiểu 3 ký tự")
     private String name;
-
+    @NotNull
     @Min(value = 0, message = "Giá tiền phải lớn hơn 0")
     private double price;
 
     private String image;
-
-    @Min(value = 3, message = "Detail description phải có tối thiểu 3 ký tự")
+    @NotNull
+    @Size(min = 3, message = "detailDescription phải có tối thiểu 3 ký tự")
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String detailDescription;
-
-    @Min(value = 3, message = "Short Description phải có tối thiểu 3 ký tự")
+    @NotNull
+    @Size(min = 3, message = "detailDescription phải có tối thiểu 3 ký tự")
     private String shortDescription;
-
+    @NotNull
     @Min(value = 0, message = "Số lượng phải lớn hơn 0")
     private long quantity;
 
