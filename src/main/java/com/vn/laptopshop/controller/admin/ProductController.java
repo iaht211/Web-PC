@@ -90,8 +90,8 @@ public class ProductController {
         currProduct.setFactory(product.getFactory());
         currProduct.setQuantity(product.getQuantity());
         currProduct.setSold(product.getSold());
-        currProduct.setshort_desc(product.getshort_desc());
-        currProduct.setdetail_desc(product.getdetail_desc());
+        currProduct.setShort_desc(product.getShort_desc());
+        currProduct.setDetail_desc(product.getDetail_desc());
         return "redirect:/admin/product";
     }
 
