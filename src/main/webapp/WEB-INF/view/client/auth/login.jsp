@@ -34,10 +34,10 @@
                                                         </c:set> -->
                                                         <input
                                                             class="form-control ${not empty errorEmail ? 'is-invalid' : ''}"
-                                                            type="email" placeholder="name@example.com" />
-                                                        <label>Email address</label>
+                                                            type="text" placeholder="name@example.com" />
+                                                        <label>User Name</label>
                                                         <!-- <form:errors path="email" /> -->
-                                                        ${errorEmail}
+
                                                     </div>
                                                     <div class="form-floating mb-3">
                                                         <!-- <c:set var="errorEmail">
@@ -48,7 +48,7 @@
                                                             type="email" placeholder="name@example.com" />
                                                         <label>Password</label>
                                                         <!-- <form:errors path="email" /> -->
-                                                        ${errorEmail}
+
                                                     </div>
 
                                                     <div class="mt-4 mb-0">
