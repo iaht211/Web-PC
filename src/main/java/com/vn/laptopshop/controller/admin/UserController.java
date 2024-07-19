@@ -80,7 +80,7 @@ public class UserController {
             return "admin/user/create";
         }
         ///
-        String avatar = this.uploadService.handleSaveUploadFile(file, "product");
+        String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
         System.out.println(avatar);
         String hashPassword = this.passwordEncoder.encode(newUser.getPassword());
         System.out.println("check password: " + hashPassword);
