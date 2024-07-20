@@ -121,10 +121,16 @@
                                                                         <fmt:formatNumber value="${product.price}"
                                                                             type="number" /> / kg
                                                                     </p>
-                                                                    <a href="#"
-                                                                        class="mx-auto border border-secondary rounded-pill px-3 text-primary"><i
-                                                                            class="fa fa-shopping-bag me-2 text-primary"></i>
-                                                                        Add to cart</a>
+                                                                    <form method="post"
+                                                                        action="/add-product-to-cart/${product.id}">
+                                                                        <input type="hidden"
+                                                                            name="${_csrf.parameterName}"
+                                                                            value="${_csrf.token}" />
+                                                                        <button
+                                                                            class="mx-auto border border-secondary rounded-pill px-3 text-primary"><i
+                                                                                class="fa fa-shopping-bag me-2 text-primary"></i>
+                                                                            Add to cart</button>
+                                                                    </form>
                                                                 </div>
                                                             </div>
                                                         </div>
