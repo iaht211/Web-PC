@@ -51,32 +51,31 @@ public class ProductService {
     public void handleAddProductToCart(long productId, String email, HttpSession session) {
         User user = userService.getUserByEmail(email);
         // check user have cart ? not -> create
-        if (user != null) {
-            Cart cart = cartRepository.findByUser(user);
 
-            if (cart == null) {
-                Cart newCart = new Cart();
-                newCart.setSum(0);
-                newCart.setUser(user);
-                cart = this.cartRepository.save(newCart);
-            }
+        Cart cart = cartRepository.findByUser(user);
 
-            Product product = this.productRepository.findById(productId);
-            CartDetail cart_detail = this.cartDetailRepository.findByCartAndProduct(cart, product);
-            if (cart_detail == null) {
-                CartDetail newCartDetail = new CartDetail();
-                newCartDetail.setCart(cart);
-                newCartDetail.setProduct(product);
-                newCartDetail.setQuantity(1);
-                newCartDetail.setPrice(product.getPrice());
-                cartDetailRepository.save(newCartDetail);
-                int sum = cart.getSum() + 1;
-                cart.setSum(sum);
-                cart = this.cartRepository.save(cart);
-                session.setAttribute("sum", sum);
-            } else {
-                cart_detail.setQuantity(cart_detail.getQuantity() + 1);
-            }
+        if (cart == null) {
+            Cart newCart = new Cart();
+            newCart.setSum(0);
+            newCart.setUser(user);
+            cart = this.cartRepository.save(newCart);
+        }
+
+        Product product = this.productRepository.findById(productId);
+        CartDetail cart_detail = this.cartDetailRepository.findByCartAndProduct(cart, product);
+        if (cart_detail == null) {
+            CartDetail newCartDetail = new CartDetail();
+            newCartDetail.setCart(cart);
+            newCartDetail.setProduct(product);
+            newCartDetail.setQuantity(1);
+            newCartDetail.setPrice(product.getPrice());
+            cartDetailRepository.save(newCartDetail);
+            int sum = cart.getSum() + 1;
+            cart.setSum(sum);
+            cart = this.cartRepository.save(cart);
+            session.setAttribute("sum", sum);
+        } else {
+            cart_detail.setQuantity(cart_detail.getQuantity() + 1);
         }
     }
 

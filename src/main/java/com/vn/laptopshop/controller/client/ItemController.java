@@ -1,13 +1,19 @@
 package com.vn.laptopshop.controller.client;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.vn.laptopshop.domain.Cart;
+import com.vn.laptopshop.domain.CartDetail;
 import com.vn.laptopshop.domain.Product;
+import com.vn.laptopshop.domain.User;
 import com.vn.laptopshop.service.ProductService;
+import com.vn.laptopshop.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -15,9 +21,11 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class ItemController {
     private ProductService productService;
+    private UserService userService;
 
-    public ItemController(ProductService productService) {
+    public ItemController(ProductService productService, UserService userService) {
         this.productService = productService;
+        this.userService = userService;
     }
 
     @GetMapping("/product/{id}")
@@ -36,7 +44,19 @@ public class ItemController {
     }
 
     @GetMapping("/cart")
-    public String getCartPage() {
+    public String getCartPage(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        long id = (long) session.getAttribute("id");
+        User user = userService.findById(id);
+        Cart cart = user.getCart();
+        List<CartDetail> cartDetails = cart.getCartDetails();
+
+        double totalPrice = 0;
+        for (CartDetail cartDetail : cartDetails) {
+            totalPrice += cartDetail.getPrice() * cartDetail.getQuantity();
+        }
+        model.addAttribute("cartDetails", cartDetails);
+        model.addAttribute("totalPrice", totalPrice);
         return "client/cart/index";
     }
 }
