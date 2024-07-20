@@ -1,5 +1,6 @@
 package com.vn.laptopshop.controller.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -45,16 +46,20 @@ public class ItemController {
 
     @GetMapping("/cart")
     public String getCartPage(HttpServletRequest request, Model model) {
+        User currentUser = new User();// null
         HttpSession session = request.getSession(false);
         long id = (long) session.getAttribute("id");
-        User user = userService.findById(id);
-        Cart cart = user.getCart();
-        List<CartDetail> cartDetails = cart.getCartDetails();
+        currentUser.setId(id);
+
+        Cart cart = this.productService.fetchByUser(currentUser);
+
+        List<CartDetail> cartDetails = cart == null ? new ArrayList<CartDetail>() : cart.getCartDetails();
 
         double totalPrice = 0;
-        for (CartDetail cartDetail : cartDetails) {
-            totalPrice += cartDetail.getPrice() * cartDetail.getQuantity();
+        for (CartDetail cd : cartDetails) {
+            totalPrice += cd.getPrice() * cd.getQuantity();
         }
+
         model.addAttribute("cartDetails", cartDetails);
         model.addAttribute("totalPrice", totalPrice);
         return "client/cart/index";
