@@ -1,24 +1,33 @@
 package com.vn.laptopshop.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.vn.laptopshop.domain.Cart;
+import com.vn.laptopshop.domain.CartDetail;
 import com.vn.laptopshop.domain.Role;
 import com.vn.laptopshop.domain.User;
 import com.vn.laptopshop.domain.dto.RegisterDTO;
+import com.vn.laptopshop.repository.CartDetailRepository;
 import com.vn.laptopshop.repository.RoleRepository;
 import com.vn.laptopshop.repository.UserRepository;
+
+import jakarta.servlet.http.HttpSession;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final CartDetailRepository cartDetailRepository;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository,
+            CartDetailRepository cartDetailRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.cartDetailRepository = cartDetailRepository;
     }
 
     public String handleHello() {
@@ -68,5 +77,29 @@ public class UserService {
 
     public User findById(long id) {
         return userRepository.findById(id);
+    }
+
+    public void handleRemoveCartDetail(long cartDetailId, HttpSession session) {
+        Optional<CartDetail> optional = this.cartDetailRepository.findById(cartDetailId);
+        if (optional.isPresent()) {
+            CartDetail cartDetail = optional.get();
+
+            Cart currentCart = cartDetail.getCart();
+
+            // delete cart-detail
+            this.cartDetailRepository.deleteById(cartDetailId);
+
+            // update cart
+            if (currentCart.getSum() >= 1) {
+                int s = currentCart.getSum() - 1;
+                currentCart.setSum(s);
+                session.setAttribute("sum", s);
+                this.cartDetailRepository.save(currentCart);
+            } else {
+                this.cartDetailRepository.deleteById(cartDetailId);
+                session.setAttribute("sum", 0);
+                this.cartDetailRepository.save(currentCart);
+            }
+        }
     }
 }
