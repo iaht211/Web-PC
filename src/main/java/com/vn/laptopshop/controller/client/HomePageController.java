@@ -1,5 +1,6 @@
 package com.vn.laptopshop.controller.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.vn.laptopshop.domain.Order;
 import com.vn.laptopshop.domain.Product;
 import com.vn.laptopshop.domain.User;
 import com.vn.laptopshop.domain.dto.RegisterDTO;
@@ -75,5 +77,12 @@ public class HomePageController {
     @GetMapping("/access-deny")
     public String getDenyPage() {
         return "client/auth/deny";
+    }
+
+    @GetMapping("order-history") 
+    public String getOrderHistoryPage(Model model) {
+        List<Order> orders = userService.getAllOrders();
+        model.addAttribute("orders", orders);
+        return "client/order/order-history";
     }
 }

@@ -5,7 +5,10 @@ import org.springframework.stereotype.Repository;
 
 import com.vn.laptopshop.domain.Order;
 
+
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
     Order save(Order order);
+    Order findById(long id);
+    void deleteById(long id);
 }

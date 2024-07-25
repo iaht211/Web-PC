@@ -3,7 +3,6 @@ package com.vn.laptopshop.controller.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +15,6 @@ import com.vn.laptopshop.domain.Cart;
 import com.vn.laptopshop.domain.CartDetail;
 import com.vn.laptopshop.domain.Product;
 import com.vn.laptopshop.domain.User;
-import com.vn.laptopshop.service.CartDetailService;
 import com.vn.laptopshop.service.ProductService;
 import com.vn.laptopshop.service.UserService;
 
@@ -44,7 +42,7 @@ public class ItemController {
     public String addProductToCart(@PathVariable long id, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         String email = (String) session.getAttribute("email");
-        this.productService.handleAddProductToCart(id, email, session);
+        this.productService.handleAddProductToCart(id, email, session, 1);
         return "redirect:/";
     }
 
@@ -125,4 +123,16 @@ public class ItemController {
         return "client/cart/thanks";
     }
 
+    @PostMapping("/add-product-from-detail")
+    public String handleAddProductFromDetail(
+        @RequestParam("id") long  id,
+        @RequestParam("quantity") long quantity,
+        HttpServletRequest request
+    ) {
+        HttpSession session = request.getSession(false);
+
+        String email = (String) session.getAttribute("email");
+        this.productService.handleAddProductToCart(id, email, session, quantity);
+        return "redirect:/product/" + id;
+    }
 }

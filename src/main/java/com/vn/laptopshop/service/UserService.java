@@ -7,10 +7,13 @@ import org.springframework.stereotype.Service;
 
 import com.vn.laptopshop.domain.Cart;
 import com.vn.laptopshop.domain.CartDetail;
+import com.vn.laptopshop.domain.Order;
 import com.vn.laptopshop.domain.Role;
 import com.vn.laptopshop.domain.User;
 import com.vn.laptopshop.domain.dto.RegisterDTO;
 import com.vn.laptopshop.repository.CartDetailRepository;
+import com.vn.laptopshop.repository.OrderRepository;
+import com.vn.laptopshop.repository.ProductRepository;
 import com.vn.laptopshop.repository.RoleRepository;
 import com.vn.laptopshop.repository.UserRepository;
 
@@ -22,12 +25,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final CartDetailRepository cartDetailRepository;
+    private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
 
     public UserService(UserRepository userRepository, RoleRepository roleRepository,
-            CartDetailRepository cartDetailRepository) {
+            CartDetailRepository cartDetailRepository, OrderRepository orderRepository,
+            ProductRepository productRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.cartDetailRepository = cartDetailRepository;
+        this.orderRepository = orderRepository;
+        this.productRepository = productRepository;
     }
 
     public String handleHello() {
@@ -102,4 +110,24 @@ public class UserService {
             }
         }
     }
+
+    public long countUsers() {
+        long countUsers = userRepository.count();
+        return countUsers;
+    }
+
+    public long countOrders() {
+        long countOrders = orderRepository.count();
+        return countOrders;
+    }
+    
+    public long countProducts() {
+        long countProducts = productRepository.count();
+        return countProducts;
+    }
+
+    public List<Order> getAllOrders() {
+       return orderRepository.findAll();
+    }
+    
 }
