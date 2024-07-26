@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.vn.laptopshop.domain.Cart;
@@ -14,15 +15,16 @@ import com.vn.laptopshop.domain.CartDetail;
 import com.vn.laptopshop.domain.Order;
 import com.vn.laptopshop.domain.OrderDetail;
 import com.vn.laptopshop.domain.Product;
+import com.vn.laptopshop.domain.Product_;
 import com.vn.laptopshop.domain.User;
 import com.vn.laptopshop.repository.CartDetailRepository;
 import com.vn.laptopshop.repository.CartRepository;
 import com.vn.laptopshop.repository.OrderDetailRepository;
 import com.vn.laptopshop.repository.OrderRepository;
 import com.vn.laptopshop.repository.ProductRepository;
-import com.vn.laptopshop.repository.UserRepository;
 
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.servlet.http.HttpSession;
 
 @Service
@@ -51,6 +53,14 @@ public class ProductService {
 
     public Page<Product> findAll(Pageable pageable) {
         return productRepository.findAll(pageable);
+    }
+
+    private Specification<Product> nameLike(String name) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(Product_.NAME), "%" + name + "%");
+    }
+
+    public Page<Product> fetchAllProducts(Pageable pageable, String name) {
+        return productRepository.findAll(this.nameLike(name), pageable);
     }
 
     public Product findById(long id) {

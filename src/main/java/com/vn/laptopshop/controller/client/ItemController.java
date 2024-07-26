@@ -2,7 +2,11 @@ package com.vn.laptopshop.controller.client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -125,14 +129,37 @@ public class ItemController {
 
     @PostMapping("/add-product-from-detail")
     public String handleAddProductFromDetail(
-        @RequestParam("id") long  id,
-        @RequestParam("quantity") long quantity,
-        HttpServletRequest request
-    ) {
+            @RequestParam("id") long id,
+            @RequestParam("quantity") long quantity,
+            HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
         String email = (String) session.getAttribute("email");
         this.productService.handleAddProductToCart(id, email, session, quantity);
         return "redirect:/product/" + id;
+    }
+
+    @GetMapping("/products")
+    public String getProductsPage(Model model,
+            @RequestParam(defaultValue = "1", name = "page") Optional<String> s_page,
+            @RequestParam(name = "name") Optional<String> name) {
+        int page = 1;
+        try {
+            if (s_page.isPresent())
+                page = Integer.valueOf(s_page.get());
+        } catch (Exception error) {
+            System.out.println(error.getMessage());
+        }
+
+        String nameFind = name.get();
+
+        int size = 4;
+        Pageable paging = PageRequest.of(page - 1, size);
+        Page<Product> pagedResult = productService.fetchAllProducts(paging, nameFind);
+        List<Product> products = pagedResult.getContent();
+        model.addAttribute("products", products);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", pagedResult.getTotalPages());
+        return "client/product/total";
     }
 }

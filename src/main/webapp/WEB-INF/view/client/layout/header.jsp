@@ -13,7 +13,7 @@
                     <div class="collapse navbar-collapse bg-white justify-content-between mx-5" id="navbarCollapse">
                         <div class="navbar-nav">
                             <a href="/" class="nav-item nav-link active">Trang chủ</a>
-                            <a href="shop.html" class="nav-item nav-link">Sản phẩm</a>
+                            <a href="/products" class="nav-item nav-link">Sản phẩm</a>
                         </div>
                         <c:if test="${not empty pageContext.request.userPrincipal}">
                             <div class="d-flex m-3 me-0">
