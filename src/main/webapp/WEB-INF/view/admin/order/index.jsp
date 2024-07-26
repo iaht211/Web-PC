@@ -25,8 +25,7 @@
                                 <h1 class="mt-4">User</h1>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-                                    <li class="breadcrumb-item active"><a href="/admin/order">Orders</a></li>
-                                    <li class="breadcrumb-item"><a>Update</a></li>
+                                    <li class="breadcrumb-item active">Orders</li>
                                 </ol>
                                 <div class="container mt-5">
                                     <div class="row">
@@ -65,6 +64,23 @@
                                                     </c:forEach>
                                                 </tbody>
                                             </table>
+                                            <nav aria-label="Page navigation example">
+                                                <ul class="pagination justify-content-center">
+                                                  <li class="page-item">
+                                                    <a class="${1 eq currentPage ? 'disabled page-link' : 'page-link'}" href="order?page=${currentPage-1}" aria-label="Previous">
+                                                      <span aria-hidden="true">&laquo;</span>
+                                                    </a>
+                                                  </li>
+                                                  <c:forEach begin="0" end="${totalPages - 1}" varStatus="loop">
+                                                  <li class="page-item"><a class="page-link" href="order?page=${loop.index+1}">${loop.index + 1}</a></li>
+                                                </c:forEach>
+                                                  <li class="page-item">
+                                                    <a class="${totalPages eq currentPage ? 'disabled page-link' : 'page-link'}" href="order?page=${currentPage+1}" aria-label="Next">
+                                                      <span aria-hidden="true">&raquo;</span>
+                                                    </a>
+                                                  </li>
+                                                </ul>
+                                              </nav>
                                         </div>
 
                                     </div>

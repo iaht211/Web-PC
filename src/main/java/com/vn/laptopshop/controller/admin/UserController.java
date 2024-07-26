@@ -1,6 +1,5 @@
 package com.vn.laptopshop.controller.admin;
 
-import com.vn.laptopshop.config.SecurityConfig;
 import com.vn.laptopshop.domain.User;
 import com.vn.laptopshop.service.UploadService;
 import com.vn.laptopshop.service.UserService;
@@ -8,7 +7,11 @@ import com.vn.laptopshop.service.UserService;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,9 +48,23 @@ public class UserController {
     }
 
     @GetMapping("/admin/user")
-    public String tableUsers(Model model) {
-        List<User> arr = this.userService.getAllUsers();
-        model.addAttribute("users", arr);
+    public String tableUsers(Model model, @RequestParam(defaultValue = "1", name = "page") Optional<String> s_page) {
+        int page = 1;
+        try {
+            if(s_page.isPresent()) 
+                    page = Integer.valueOf(s_page.get());
+        }
+            catch(Exception error) {
+                System.out.println(error.getMessage());
+            }
+        
+        int size = 2; 
+        Pageable paging = PageRequest.of(page-1, size);
+        Page<User> pagedResult = userService.findAll(paging);
+        List<User> users = pagedResult.getContent();
+        model.addAttribute("users", users);
+        model.addAttribute("currentPage", page-1);
+        model.addAttribute("totalPages", pagedResult.getTotalPages());
         return "admin/user/index";
     }
 

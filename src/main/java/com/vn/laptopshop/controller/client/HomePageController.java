@@ -3,6 +3,9 @@ package com.vn.laptopshop.controller.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +40,11 @@ public class HomePageController {
 
     @GetMapping("/")
     public String getHomePage(Model model) {
-        List<Product> products = productService.findAll();
+        int page = 0;
+        int size = 10;
+        Pageable paging = PageRequest.of(page, size);
+        Page<Product> pageResult= productService.findAll(paging);
+        List<Product> products = pageResult.getContent();
         model.addAttribute("products", products);
         return "client/homepage/index";
     }

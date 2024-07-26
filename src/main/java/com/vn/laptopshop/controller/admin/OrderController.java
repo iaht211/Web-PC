@@ -1,7 +1,11 @@
 package com.vn.laptopshop.controller.admin;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,10 +32,24 @@ public class OrderController {
     }
 
     @GetMapping()
-    public String getOrderPage(Model model) {
-        List<Order> orders = this.orderRepository.findAll();
+    public String getOrderPage(Model model, @RequestParam(defaultValue = "1", name = "page") Optional<String> s_page) {
+        int page = 1;
+        System.out.println(">>> check s_page: " + s_page.get());
+        try {
+            if(s_page.isPresent()) 
+                    page = Integer.valueOf(s_page.get());
+        }
+            catch(Exception error) {
+                System.out.println(error.getMessage());
+            }
+            int size = 2; 
+        Pageable pageable = PageRequest.of(page-1, size);
+        Page<Order> pageResult = orderRepository.findAll(pageable);
+        List<Order> orders = pageResult.getContent();
+        int totalPages = pageResult.getTotalPages();
         model.addAttribute("orders", orders);
-
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
         return "admin/order/index";
     }
 
