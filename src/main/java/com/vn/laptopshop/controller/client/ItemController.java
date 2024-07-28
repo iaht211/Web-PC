@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.vn.laptopshop.domain.Cart;
 import com.vn.laptopshop.domain.CartDetail;
 import com.vn.laptopshop.domain.Product;
+import com.vn.laptopshop.domain.Product_;
 import com.vn.laptopshop.domain.User;
+import com.vn.laptopshop.domain.dto.ProductCriteriaDTO;
 import com.vn.laptopshop.service.ProductService;
 import com.vn.laptopshop.service.UserService;
 
@@ -141,61 +144,53 @@ public class ItemController {
     }
 
     @GetMapping("/products")
-    public String getProductsPage(Model model,
-            @RequestParam(defaultValue = "1", name = "page") Optional<String> pageOptional,
-            @RequestParam(name = "name") Optional<String> nameOptional,
-            @RequestParam(name = "min-price") Optional<String> minOptional,
-            @RequestParam(name = "max-price") Optional<String> maxOptional,
-            @RequestParam(name = "factory") Optional<String> factoryOptional,
-            @RequestParam(name = "price") Optional<String> priceOptional) {
+    public String getProductPage(Model model,
+            ProductCriteriaDTO productCriteriaDTO,
+            HttpServletRequest request) {
         int page = 1;
         try {
-            if (pageOptional.isPresent())
-                page = Integer.valueOf(pageOptional.get());
-        } catch (Exception error) {
-            System.out.println(error.getMessage());
+            if (productCriteriaDTO.getPage().isPresent()) {
+                // convert from String to int
+                page = Integer.parseInt(productCriteriaDTO.getPage().get());
+            } else {
+                // page = 1
+            }
+        } catch (Exception e) {
+            // page = 1
+            // TODO: handle exception
         }
 
-        int size = 4;
-        Pageable paging = PageRequest.of(page - 1, 60);
+        // check sort price
+        Pageable pageable = PageRequest.of(page - 1, 10);
 
-        // case 0: name
-        // String name = nameOptional.isPresent() ? nameOptional.get() : "";
-        // Page<Product> prs = this.productService.fetchProductsWithSpec(paging, name);
+        if (productCriteriaDTO.getSort() != null &&
+                productCriteriaDTO.getSort().isPresent()) {
+            String sort = productCriteriaDTO.getSort().get();
+            if (sort.equals("gia-tang-dan")) {
+                pageable = PageRequest.of(page - 1, 10, Sort.by(Product_.PRICE).ascending());
+            } else if (sort.equals("gia-giam-dan")) {
+                pageable = PageRequest.of(page - 1, 10,
+                        Sort.by(Product_.PRICE).descending());
+            }
+        }
 
-        // case 1: min price
-        // double minPrice = minOptional.isPresent() ? Double.valueOf(minOptional.get())
-        // : 0;
-        // Page<Product> prs = this.productService.fetchProductsWithSpec(paging,
-        // maxPrice);
+        Page<Product> prs = this.productService.fetchProductsWithSpec(pageable,
+                productCriteriaDTO);
 
-        // case 2: max price
-        // double maxPrice = maxOptional.isPresent() ? Double.valueOf(maxOptional.get())
-        // : 0;
-        // Page<Product> prs = this.productService.fetchProductsWithSpec(paging,
-        // maxPrice);
+        List<Product> products = prs.getContent().size() > 0 ? prs.getContent()
+                : new ArrayList<Product>();
 
-        // case 3: factory
-        // String factory = factoryOptional.isPresent() ? factoryOptional.get() : "";
-        // Page<Product> prs = this.productService.fetchProductsWithSpec(paging,
-        // factory);
+        String qs = request.getQueryString();
+        if (qs != null && !qs.isBlank()) {
+            // remove page
+            qs = qs.replace("page=" + page, "");
+        }
 
-        // case list factory
-        // List<String> factory = Arrays.asList(factoryOptional.get().split(","));
-        // Page<Product> prs = this.productService.fetchProductsWithSpec(paging,
-        // factory);
-
-        // case price
-        // String price = priceOptional.isPresent() ? priceOptional.get() : "";
-        // Page<Product> prs = this.productService.fetchProductsWithSpec(paging, price);
-
-        // list price
-        List<String> price = Arrays.asList(priceOptional.get().split(","));
-        Page<Product> prs = this.productService.fetchProductsWithSpec(paging, price);
-        List<Product> products = prs.getContent();
         model.addAttribute("products", products);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", prs.getTotalPages());
+        model.addAttribute("queryString", qs);
         return "client/product/total";
     }
+
 }

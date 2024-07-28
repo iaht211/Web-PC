@@ -17,14 +17,14 @@ import com.vn.laptopshop.domain.OrderDetail;
 import com.vn.laptopshop.domain.Product;
 import com.vn.laptopshop.domain.Product_;
 import com.vn.laptopshop.domain.User;
+import com.vn.laptopshop.domain.dto.ProductCriteriaDTO;
 import com.vn.laptopshop.repository.CartDetailRepository;
 import com.vn.laptopshop.repository.CartRepository;
 import com.vn.laptopshop.repository.OrderDetailRepository;
 import com.vn.laptopshop.repository.OrderRepository;
 import com.vn.laptopshop.repository.ProductRepository;
+import com.vn.laptopshop.service.specification.ProductSpecs;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.servlet.http.HttpSession;
 
 @Service
@@ -51,116 +51,78 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    // case name
-    public static Specification<Product> nameLike(String name) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(Product_.NAME), "%" + name + "%");
-    }
-    // public Page<Product> fetchProductsWithSpec(Pageable pageable, String name) {
-    // return productRepository.findAll(nameLike(name), pageable);
-    // }
-
-    // case min price
-
-    public static Specification<Product> filterMinPrice(double minPrice) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.ge(root.get(Product_.PRICE), minPrice);
+    public Page<Product> findAll(Pageable pageable) {
+        return this.productRepository.findAll(pageable);
     }
 
-    // public Page<Product> fetchProductsWithSpec(Pageable pageable, double
-    // minPrice) {
-    // return productRepository.findAll(this.filterMinPrice(minPrice), pageable);
-    // }
+    ////
 
-    // case max price
-    public static Specification<Product> filterMaxPrice(double maxPrice) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.le(root.get(Product_.PRICE), maxPrice);
+    public Page<Product> fetchProducts(Pageable page) {
+        return this.productRepository.findAll(page);
     }
 
-    // public Page<Product> fetchProductsWithSpec(Pageable pageable, double
-    // maxPrice) {
-    // return productRepository.findAll(this.filterMaxPrice(maxPrice), pageable);
-    // }
+    public Page<Product> fetchProductsWithSpec(Pageable page, ProductCriteriaDTO productCriteriaDTO) {
+        if (productCriteriaDTO.getTarget() == null
+                && productCriteriaDTO.getFactory() == null
+                && productCriteriaDTO.getPrice() == null) {
+            return this.productRepository.findAll(page);
+        }
 
-    // case factory
-    public static Specification<Product> matchListFactory(List<String> factory) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.in(root.get(Product_.FACTORY)).value(factory);
+        Specification<Product> combinedSpec = Specification.where(null);
+
+        if (productCriteriaDTO.getTarget() != null && productCriteriaDTO.getTarget().isPresent()) {
+            Specification<Product> currentSpecs = ProductSpecs.matchListTarget(productCriteriaDTO.getTarget().get());
+            combinedSpec = combinedSpec.and(currentSpecs);
+        }
+        if (productCriteriaDTO.getFactory() != null && productCriteriaDTO.getFactory().isPresent()) {
+            Specification<Product> currentSpecs = ProductSpecs.matchListFactory(productCriteriaDTO.getFactory().get());
+            combinedSpec = combinedSpec.and(currentSpecs);
+        }
+
+        if (productCriteriaDTO.getPrice() != null && productCriteriaDTO.getPrice().isPresent()) {
+            Specification<Product> currentSpecs = this.buildPriceSpecification(productCriteriaDTO.getPrice().get());
+            combinedSpec = combinedSpec.and(currentSpecs);
+        }
+
+        return this.productRepository.findAll(combinedSpec, page);
     }
 
-    public static Specification<Product> filterFactory(String factory) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(Product_.FACTORY), factory);
-    }
-
-    // public Page<Product> fetchProductsWithSpec(Pageable pageable, List<String>
-    // factory) {
-    // return productRepository.findAll(this.matchListFactory(factory), pageable);
-    // }
-
-    // case price 10 to 15
-    public static Specification<Product> matchPrice(double min, double max) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.and(
-                criteriaBuilder.gt(root.get(Product_.PRICE), min),
-                criteriaBuilder.le(root.get(Product_.PRICE), max));
-    }
-
-    // public Page<Product> fetchProductsWithSpec(Pageable pageable, String price) {
-    // if (price.equals("10-toi-15-trieu")) {
-    // double min = 10000000;
-    // double max = 15000000;
-    // return this.productRepository.findAll(matchPrice(min, max), pageable);
-    // }
-    // if (price.equals("15-toi-20-trieu")) {
-    // double min = 15000000;
-    // double max = 20000000;
-    // return this.productRepository.findAll(matchPrice(min, max), pageable);
-    // }
-    // if (price.equals("20-toi-30-trieu")) {
-    // double min = 20000000;
-    // double max = 30000000;
-    // return this.productRepository.findAll(matchPrice(min, max), pageable);
-    // }
-
-    // return productRepository.findAll(pageable);
-    // }
-
-    public Specification<Product> matchMultiPrice(double min, double max) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.between(root.get(Product_.PRICE), min, max);
-    }
-
-    public Page<Product> fetchProductsWithSpec(Pageable pageable, List<String> price) {
-        Specification<Product> combinedSpec = (root, query, criteriaBuilder) -> criteriaBuilder.disjunction();
-        int count = 0;
+    public Specification<Product> buildPriceSpecification(List<String> price) {
+        Specification<Product> combinedSpec = Specification.where(null); // disconjunction
         for (String p : price) {
             double min = 0;
             double max = 0;
+
+            // Set the appropriate min and max based on the price range string
             switch (p) {
-                case "10-toi-15-trieu":
+                case "duoi-10-trieu":
+                    min = 1;
+                    max = 10000000;
+                    break;
+                case "10-15-trieu":
                     min = 10000000;
                     max = 15000000;
-                    count++;
                     break;
-
-                case "15-toi-20-trieu":
+                case "15-20-trieu":
                     min = 15000000;
                     max = 20000000;
-                    count++;
                     break;
-
-                case "20-toi-30-trieu":
+                case "tren-20-trieu":
                     min = 20000000;
-                    max = 30000000;
-                    count++;
+                    max = 200000000;
                     break;
             }
+
             if (min != 0 && max != 0) {
-                Specification<Product> rangeSpec = matchMultiPrice(min, max);
+                Specification<Product> rangeSpec = ProductSpecs.matchMultiplePrice(min, max);
                 combinedSpec = combinedSpec.or(rangeSpec);
             }
         }
-        if (count == 0) {
-            return this.productRepository.findAll(pageable);
-        }
-        return this.productRepository.findAll(combinedSpec, pageable);
+
+        return combinedSpec;
     }
-    //////
+
+    ////
 
     public Product findById(long id) {
         return productRepository.findById(id);
